@@ -1,14 +1,14 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.secrets)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
     buildFeatures {
         viewBinding = true
         compose = true
-    }
-    composeOptions{
-        kotlinCompilerExtensionVersion = "1.4.0"
+        buildConfig = true
     }
     namespace = "com.andro.testassesmentfrontend"
     compileSdk {
@@ -48,6 +48,9 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.foundation)
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.ui.tooling.preview)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -61,4 +64,5 @@ dependencies {
     // Compose Navigation & ViewModel
     implementation(libs.lifecycle.viewmodel.compose)
     implementation(libs.navigation.compose)
+    debugImplementation(libs.androidx.ui.tooling)
 }

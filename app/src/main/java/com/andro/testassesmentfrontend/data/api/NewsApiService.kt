@@ -21,7 +21,6 @@ interface NewsApiService {
         @Query("apiKey") apiKey: String
     ): Response<ArticlesResponse>
 
-    // Searches articles by query, with pagination
     @GET("v2/everything")
     suspend fun searchArticles(
         @Query("q") query: String,
