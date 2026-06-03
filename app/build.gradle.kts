@@ -65,4 +65,5 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.compose)
     implementation(libs.navigation.compose)
     debugImplementation(libs.androidx.ui.tooling)
+    implementation(libs.compose.icons.core)
 }

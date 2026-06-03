@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.andro.testassesmentfrontend.data.model.Source
 import com.andro.testassesmentfrontend.data.repository.Resource
 
@@ -55,7 +56,8 @@ fun NewsScreen (
         sourcesState = sourcesState,
         selectedCategory = selectedCategory,
         onCategorySelect = { category -> selectedCategory = category },
-        onSourceClick = onSourceClick
+        onSourceClick = onSourceClick,
+        onRetry = { viewModel.fetchSourcesByCategory(selectedCategory) }
     )
 }
 
@@ -64,7 +66,8 @@ fun NewsContent(
     sourcesState: Resource<List<Source>>,
     selectedCategory: String,
     onCategorySelect: (String) -> Unit,
-    onSourceClick: (String) -> Unit
+    onSourceClick: (String) -> Unit,
+    onRetry: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         // Categories Row
@@ -92,22 +95,26 @@ fun NewsContent(
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
                 is Resource.Error -> {
-                    Text(
-                        text = sourcesState.message ?: "Unknown Error",
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.align(Alignment.Center)
+                    ErrorState(
+                        message = sourcesState.message ?: "Network error occurred.",
+                        onRetry = onRetry
                     )
                 }
                 is Resource.Success -> {
                     val sources = sourcesState.data ?: emptyList()
-                    LazyColumn(
-                        contentPadding = PaddingValues(18.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        items(sources) { source ->
-                            SourceItem(source = source, onClick = { onSourceClick(source.id) })
+                    if (sources.isEmpty()) {
+                        EmptyState()
+                        } else {
+                        LazyColumn(
+                            contentPadding = PaddingValues(18.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(sources) { source ->
+                                SourceItem(source = source, onClick = { onSourceClick(source.id) })
+                            }
                         }
                     }
+
                 }
             }
         }
@@ -123,6 +130,7 @@ fun SourceItem(source: Source, onClick: () -> Unit) {
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
+
             Text(
                 text = source.name,
                 style = MaterialTheme.typography.titleMedium,
@@ -154,7 +162,8 @@ fun NewsScreenFullPreview() {
             sourcesState = Resource.Success(dummySources),
             selectedCategory = "business",
             onCategorySelect = {},
-            onSourceClick = {}
+            onSourceClick = {},
+            onRetry = {}
         )
     }
 }
