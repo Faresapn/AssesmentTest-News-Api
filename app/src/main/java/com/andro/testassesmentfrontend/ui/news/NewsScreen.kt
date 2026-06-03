@@ -70,7 +70,6 @@ fun NewsContent(
     onRetry: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        // Categories Row
         LazyRow(
             modifier = Modifier.padding(vertical = 8.dp),
             contentPadding = PaddingValues(horizontal = 16.dp),
@@ -87,8 +86,6 @@ fun NewsContent(
         }
 
         Divider()
-
-        // Sources List Wrapper
         Box(modifier = Modifier.fillMaxSize()) {
             when (sourcesState) {
                 is Resource.Loading -> {
@@ -149,7 +146,6 @@ fun SourceItem(source: Source, onClick: () -> Unit) {
 @Preview(showBackground = true, name = "Full Screen Preview")
 @Composable
 fun NewsScreenFullPreview() {
-    // Generate mock list data
     val dummySources = listOf(
         Source("1", "BBC News", "International news coverage.", "general"),
         Source("2", "TechCrunch", "Startup and technology insights.", "technology"),
@@ -157,7 +153,6 @@ fun NewsScreenFullPreview() {
     )
 
     MaterialTheme {
-        // We directly preview NewsContent instead of NewsScreen to bypass the ViewModel completely!
         NewsContent(
             sourcesState = Resource.Success(dummySources),
             selectedCategory = "business",

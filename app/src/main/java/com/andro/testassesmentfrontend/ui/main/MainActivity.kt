@@ -47,18 +47,15 @@ class MainActivity : AppCompatActivity() {
 
             NavHost(navController = navController, startDestination = "sources_screen") {
 
-                // Screen 1: News Categories & Sources
                 composable("sources_screen") {
                     NewsScreen(
                         viewModel = viewModel,
                         onSourceClick = { sourceId ->
-                            // Navigate to the articles screen, passing the selected source ID
                             navController.navigate("articles_screen/$sourceId")
                         }
                     )
                 }
 
-                // Screen 2: News Articles List with Search and Infinite Scrolling
                 composable(
                     route = "articles_screen/{sourceId}",
                     arguments = listOf(navArgument("sourceId") { type = NavType.StringType })
@@ -68,14 +65,11 @@ class MainActivity : AppCompatActivity() {
                         viewModel = articleViewModel,
                         sourceId = sourceId,
                         onArticleClick = { articleUrl ->
-                            // URLs contain specialized symbols, so encode it cleanly prior to navigating
                             val encodedUrl = URLEncoder.encode(articleUrl, StandardCharsets.UTF_8.toString())
                             navController.navigate("web_screen/$encodedUrl")
                         }
                     )
                 }
-
-                // Screen 3: WebView Details
                 composable(
                     route = "web_screen/{url}",
                     arguments = listOf(navArgument("url") { type = NavType.StringType })

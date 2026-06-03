@@ -45,8 +45,6 @@ fun ArticlesScreen(
 ) {
     val articlesState by viewModel.articlesState.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
-
-    // Fetch initial list when screen mounts
     LaunchedEffect(sourceId) {
         viewModel.fetchArticlesBySource(sourceId, isRefresh = true)
     }
@@ -67,7 +65,6 @@ fun ArticlesScreen(
     )
 }
 
-// --- 2. STATELESS LAYER (UI Renderer & Preview Target) ---
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArticlesContent(
@@ -80,7 +77,6 @@ fun ArticlesContent(
     val listState = rememberLazyListState()
 
     Column(modifier = Modifier.fillMaxSize()) {
-        // Search Bar Header
         OutlinedTextField(
             value = searchQuery,
             onValueChange = onSearchQueryChange,
@@ -100,7 +96,7 @@ fun ArticlesContent(
                 is Resource.Error -> {
                     ErrorState(
                         message = articlesState.message ?: "Network error occurred.",
-                        onRetry = onLoadMore // Triggers a reload call
+                        onRetry = onLoadMore
                     )
                 }
                 is Resource.Success -> {
@@ -114,7 +110,6 @@ fun ArticlesContent(
                             verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             itemsIndexed(articles) { index, article ->
-                                // Endless Scrolling trigger point
                                 if (index >= articles.size - 3) {
                                     LaunchedEffect(articles.size) {
                                         onLoadMore()
@@ -130,7 +125,6 @@ fun ArticlesContent(
     }
 }
 
-// --- 3. REUSABLE LIST ITEM CARD ---
 @Composable
 fun ArticleItem(article: Article, onClick: () -> Unit) {
     Card(
@@ -162,11 +156,9 @@ fun ArticleItem(article: Article, onClick: () -> Unit) {
     }
 }
 
-// --- 4. THE ARTICLES PREVIEW ENGINE ---
 @Preview(showBackground = true, name = "Articles Screen Design")
 @Composable
 fun ArticlesScreenPreview() {
-    // Generate isolated dummy articles list matching your backend data models
     val mockSource = SourceInfo("techcrunch", "TechCrunch")
     val dummyArticles = listOf(
         Article(
@@ -192,7 +184,6 @@ fun ArticlesScreenPreview() {
     )
 
     MaterialTheme {
-        // Call your stateless container passing the mock success results directly
         ArticlesContent(
             articlesState = Resource.Success(dummyArticles),
             searchQuery = "",

@@ -22,7 +22,6 @@ object NetworkModule {
             .build()
     }
 
-    // Retrofit initialization wrapper (Lazy initialization guarantees thread safety)
     private val retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -31,7 +30,6 @@ object NetworkModule {
             .build()
     }
 
-    // Expose the API Service to the rest of the application
     val apiService: NewsApiService by lazy {
         retrofit.create(NewsApiService::class.java)
     }

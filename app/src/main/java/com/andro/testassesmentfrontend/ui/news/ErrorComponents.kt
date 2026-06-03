@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
-// Handles Negative Cases (Network Failure, Server Downtime)
 @Composable
 fun ErrorState(
     message: String,
@@ -41,7 +40,6 @@ fun ErrorState(
     }
 }
 
-// Handles Edge Cases (Empty Search Queries, Obscure Key Words)
 @Composable
 fun EmptyState(message: String = "No articles matching your search were found.") {
     Column(

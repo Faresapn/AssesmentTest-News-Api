@@ -13,10 +13,8 @@ sealed class Resource<T> {
     class Loading<T> : Resource<T>()
 }
 
-// --- Repository ---
 class NewsRepository(private val apiService: NewsApiService, private val networkMonitor: NetworkMonitor) {
 
-    // Note: In production, inject this via BuildConfig or secure storage
     private val apiKey = BuildConfig.NEWS_API_KEY
 
     suspend fun getSources(category: String): Resource<List<Source>> {
@@ -33,7 +31,6 @@ class NewsRepository(private val apiService: NewsApiService, private val network
     }
 
     suspend fun getArticles(sourceId: String, page: Int): Resource<ArticlesResponse> {
-        // Proactive negative case verification
         if (!networkMonitor.isInternetAvailable()) {
             return Resource.Error("No internet connection. Check your network settings and try again.")
         }

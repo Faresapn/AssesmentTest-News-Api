@@ -16,7 +16,6 @@ class ArticleViewModel(private val newsRepository: NewsRepository) : ViewModel()
     private val _articlesState = MutableStateFlow<Resource<List<Article>>>(Resource.Loading())
     val articlesState: StateFlow<Resource<List<Article>>> = _articlesState.asStateFlow()
 
-    // Pagination Parameters
     private var currentPage = 1
     private var currentSourceId = ""
     private var currentQuery = ""
@@ -24,7 +23,6 @@ class ArticleViewModel(private val newsRepository: NewsRepository) : ViewModel()
     private val accumulatedArticles = mutableListOf<Article>()
     private var isSearchMode = false
 
-    // Fetch articles from a specific source network
     fun fetchArticlesBySource(sourceId: String, isRefresh: Boolean = false) {
         if (isRefresh) resetPagination()
         if (isLastPage) return
@@ -52,7 +50,6 @@ class ArticleViewModel(private val newsRepository: NewsRepository) : ViewModel()
         }
     }
 
-    // Search articles worldwide by raw keyword query
     fun searchArticles(query: String, isRefresh: Boolean = true) {
         if (query.isBlank()) return
         if (isRefresh) resetPagination()
@@ -81,7 +78,6 @@ class ArticleViewModel(private val newsRepository: NewsRepository) : ViewModel()
         }
     }
 
-    // Handles endless scroll requests from the view layer
     fun loadMoreArticles() {
         if (_articlesState.value is Resource.Loading) return
         if (isSearchMode) {
@@ -97,7 +93,6 @@ class ArticleViewModel(private val newsRepository: NewsRepository) : ViewModel()
         accumulatedArticles.clear()
     }
 
-    // --- NESTED FACTORY ---
     class Factory(private val repository: NewsRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(ArticleViewModel::class.java)) {
